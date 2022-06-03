@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Image Size Reporter",
+    "description": "Report info on all images on a page",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "js": [
+                "scripts/size_reporter.js"
+            ],
+            "matches": [
+                "*://*/*"
+            ]
+        }
+    ]
+}
