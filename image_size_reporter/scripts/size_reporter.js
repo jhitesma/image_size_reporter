@@ -16,7 +16,7 @@ function imgReport() {
 	Array.prototype.forEach.call(imgs, function (img, i){
 		if (img.getAttribute('src')) {
 			const ih = document.createElement('small');
-			ih.classList.add('img-helper');
+			ih.classList.add('img-helper', 'bg-white', 'text-dark', 'border', 'border-dark', 'rounded', 'p-1');
 
 			var comp = getSize(img);
 
@@ -42,8 +42,8 @@ function getSize(element) {
 	var borderY = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
 
 	// Element width and height minus padding and border
-	elementWidth = element.offsetWidth - paddingX - borderX;
-	elementHeight = element.offsetHeight - paddingY - borderY;
+	elementWidth = parseInt(element.offsetWidth - paddingX - borderX, 10);
+	elementHeight = parseInt(element.offsetHeight - paddingY - borderY, 10);
 	return ([elementWidth,elementHeight]);
 }
 
