@@ -3,16 +3,16 @@
     "name": "Image Size Reporter",
     "description": "Report info on all images on a page",
     "version": "0.0.0.1",
-    "content_scripts": [
-        {
-            "js": [
-                "scripts/size_reporter.js"
-            ],
-            "matches": [
-                "*://*/*"
-            ]
-        }
-    ],
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+          }
+    },
     "icons": {
         "16": "icons/icon16.png",
         "32": "icons/icon32.png",
