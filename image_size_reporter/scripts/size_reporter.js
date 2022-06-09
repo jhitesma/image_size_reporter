@@ -3,7 +3,6 @@
 // Get our button
 let getSizes = document.getElementById("getSizes");
 
-console.log(getSizes);
 // When the button is clicked, run our report
 getSizes.addEventListener("click", async () => {
 	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -15,16 +14,67 @@ getSizes.addEventListener("click", async () => {
 		},
 		(injectionResults) => {
 			for(const frameResult of injectionResults) {
-				shareReport(frameResult.result);
+				console.log(frameResult);
+				shareReport(JSON.parse(frameResult.result));
 			}
 	});
 });
 
 
+let clearSizes = document.getElementById("clearSizes");
+clearSizes.addEventListener("click", async () => {
+	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+	chrome.scripting.executeScript(
+		{
+			target: {tabId: tab.id},
+			function: resetSizes,
+		},
+		(injectionResults) => {
+			for(const frameResult of injectionResults) {
+				clearSizeTable();
+			}
+	});
+});
+
+function resetSizes() {
+	Array.prototype.forEach.call(Array.from(document.getElementsByClassName("img-helper")), function(el, i){
+		if (el.parentNode !== null) {
+			el.parentNode.removeChild(el);
+		}
+	});
+}
+
+function clearSizeTable() {
+	console.log('clearSizeTable');
+	document.getElementById('clearSizes').classList.add('hide');
+	Array.prototype.forEach.call(Array.from(document.getElementsByClassName("report-row")), function(el, i){
+		if (el.parentNode !== null) {
+			el.parentNode.removeChild(el);
+		}
+	});
+}
+
 function shareReport(data) {
-	console.log(data);
+	//console.log(data);
 	let report = document.getElementById('report');
-	document.getElementById('imageCount').innerHTML = report.length;
+	document.getElementById('imageCount').innerHTML = data.length;
+	document.getElementById('clearSizes').classList.remove('hide');
+
+	for(d of data) {
+		//console.log(d)
+		let row = document.getElementById('report-row').cloneNode(true);
+		row.removeAttribute('id');
+		row.classList.remove('hide');
+		row.classList.add('report-row');
+		row.getElementsByClassName('src')[0].innerHTML = d.src;
+		row.getElementsByClassName('id')[0].innerHTML = d.id;
+		row.getElementsByClassName('classes')[0].innerHTML = d.classes;
+		row.getElementsByClassName('rendered_size')[0].innerHTML = d.renderedW + 'x' + d.renderedH;
+		row.getElementsByClassName('orig_size')[0].innerHTML = d.origW + 'x' + d.origH;
+		report.append(row);
+	}
+
 }
 
 
@@ -34,7 +84,7 @@ function imgReport() {
 
 	imgs = Array.prototype.filter.call(imgs, function(elem){ return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )});
 
-	console.log('Found ' + imgs.length + ' images.');
+	//console.log('Found ' + imgs.length + ' images.');
 
 	// remove existing .img-helper elements
 	Array.prototype.forEach.call(Array.from(document.getElementsByClassName("img-helper")), function(el, i){
@@ -77,8 +127,24 @@ function imgReport() {
 				'origW': img.naturalWidth,
 				'origH': img.naturalHeight,
 			});
-		    console.log(bigText);
+		    //console.log(bigText);
 		} else {
+			// NO SRC!
+
+			const ih = document.createElement('small');
+			ih.classList.add('img-helper', 'bg-white', 'text-danger', 'border', 'border-danger', 'rounded', 'p-1');
+			ih.innerHTML = '!! NO SRC !!';
+			img.insertAdjacentElement('afterend', ih);
+
+			report.push({
+				'src': 'none',
+				'id': img.getAttribute('id'),
+				'classes': img.getAttribute('class'),
+				'renderedW': '??',
+				'renderedH': '??',
+				'origW': '??',
+				'origH': '??',
+			})
 			console.log('No Src: ' + img);
 		}
 	});

@@ -5,9 +5,29 @@
   </head>
   <body>
     <button id="getSizes">Get Sizes</button>
+    <button id="clearSizes" class="hide">Clear Sizes</button>
     <div>
       <p>Found <span id="imageCount">--</span> images</p>
-      <pre id="report"></pre>
+      <table>
+        <thead>
+          <tr>
+            <th>SRC</th>
+            <th>ID</th>
+            <th>Classes</th>
+            <th>Rendered Size</th>
+            <th>Orig Size</th>
+          </tr>
+        </thead>
+        <tbody id="report">
+          <tr id="report-row" class="hide">
+            <td class="src"></td>
+            <td class="id"></td>
+            <td class="classes"></td>
+            <td class="rendered_size"></td>
+            <td class="orig_size"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <script src="scripts/size_reporter.js"></script>
   </body>
